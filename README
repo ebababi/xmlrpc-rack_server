@@ -1,0 +1,51 @@
+= XMLRPC::RackServer
+
+This gem extends the Ruby standard library XML-RPC server to be Rack
+compatible.
+
+== Installation
+
+If bundler is used, just include the relevant line to Gemfile:
+
+  gem 'xmlrpc-rack_server'
+
+or in other projects:
+
+  require 'rubygems'
+  require 'xmlrpc-rack_server'
+
+== Usage
+
+Use the XML-RPC server as a normal Rack server, extended by the functionality
+of the Ruby standard library XML-RPC server.
+
+The Ruby standard library XML-RPC component documentation can be found at:
+http://www.ruby-doc.org/stdlib-1.9.3/libdoc/xmlrpc/rdoc/index.html and the Rack
+documentation at: http://rack.rubyforge.org/doc/
+
+== Examples
+
+This creates a simple XML-RPC ping server running on Rack:
+
+  class Ping
+    def self.call(env)
+      server = XMLRPC::RackServer.new
+      server.add_introspection
+      server.add_handler('weblogUpdates', self.new)
+      server.call(env)
+    end
+  
+    def ping(title, url)
+      # Do whatever with title and url
+      {:flerror => false, :message => 'Thanks for the ping.'}
+    end
+  end
+
+If Ruby on Rails framework is used the Rack server can be mounted on routes.rb:
+
+  Rails.application.routes.draw do |map|
+    mount Ping => '/ping'
+  end
+
+
+Copyright (c) 2010-2011 Nikolaos Anastopoulos, released under the MIT license

@@ -15,7 +15,7 @@ module XMLRPC
   # 
   # The XMLRPC::RackServer instance may be mounted to a Rack chain.
   class RackServer < BasicServer
-    VERSION = "0.0.1".freeze
+    VERSION = "0.0.2".freeze
 
     # Creates a new XMLRPC::RackServer instance.
     #

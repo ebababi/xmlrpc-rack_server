@@ -31,25 +31,25 @@ module XMLRPC
     def call(env)
       request = Rack::Request.new(env)
 
-      return [405, {}, "Method Not Allowed"] unless request.post?
+      return [405, {}, ["Method Not Allowed"]] unless request.post?
 
-      return [400, {}, "Bad Request"] unless not request.content_type.nil? and
+      return [400, {}, ["Bad Request"]] unless not request.content_type.nil? and
           ["application/xml", "text/xml"].include? parse_content_type(request.content_type).first
 
       length = request.content_length.to_i
-      return [411, {}, "Length Required"] unless length > 0
+      return [411, {}, ["Length Required"]] unless length > 0
 
       data = request.body
-      return [400, {}, "Bad Request"] if data.nil? or data.size != length
+      return [400, {}, ["Bad Request"]] if data.nil? or data.size != length
 
       input = data.read(length)
       output = nil
       begin
         output = process(input)
       rescue RuntimeError => e
-        return [400, {}, "Bad Request"] if e.message =~ /No valid method call/
+        return [400, {}, ["Bad Request"]] if e.message =~ /No valid method call/
       end
-      return [500, {}, "Internal Server Error"] if output.nil? or output.size <= 0
+      return [500, {}, ["Internal Server Error"]] if output.nil? or output.size <= 0
 
       response = Rack::Response.new
       response.write output
